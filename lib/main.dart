@@ -3,6 +3,7 @@ import 'package:node_auth/providers/auth.dart';
 import 'package:node_auth/providers/location_provider.dart';
 import 'package:node_auth/views/login.dart';
 import 'package:node_auth/views/pickup_home.dart';
+import 'package:node_auth/views/pickup_summary.dart';
 import 'package:node_auth/views/select_location.dart';
 import 'package:node_auth/views/signup.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         "signUp": (context) => SignUp(),
         "login": (context) => Login(),
         "select_location": (context) => WhereToScreen(),
+        "pickup_summary": (context) => PickUpSummaryPage(),
         "home": (context) =>
             Consumer<AuthProvider>(builder: (context, authProvider, _) {
               if (authProvider.authStatus == AuthStatus.isLoggedOut) {
