@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:node_auth/api/payment_api.dart';
 import 'package:node_auth/api/search_api.dart';
 import 'package:node_auth/constants/colors.dart';
 import 'package:node_auth/providers/auth.dart';
+import 'package:node_auth/widgets/loading_modal.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +18,7 @@ class PickUpSummaryPage extends StatefulWidget {
 class PickUpSummaryPageState extends State<PickUpSummaryPage> {
   final TextEditingController pickup = TextEditingController();
   final TextEditingController dropOff = TextEditingController();
+  bool showLoadingModal = false;
   @override
   Widget build(BuildContext context) {
     args = ModalRoute.of(context).settings.arguments;
@@ -32,32 +36,34 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
       body: Container(
         width: double.infinity,
         color: Colors.white,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 3,
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 50, right: 50, top: 20, bottom: 20),
-                    child: Column(
-                      children: <Widget>[
-                        CustomTile(
-                          title: "from",
-                          subTitle:
-                              "${Provider.of<AuthProvider>(context).user.firstName} ${Provider.of<AuthProvider>(context).user.lastName}",
-                          content: args.pickupLocation.name,
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        CustomTile(
-                          title: "to",
-                          subTitle: args.receiversName,
-                          content: args.dropOffLocation.name,
-                        ),
+        child: Stack(
+          children: [
+            Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 3,
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 50, right: 50, top: 20, bottom: 20),
+                        child: Column(
+                          children: <Widget>[
+                            CustomTile(
+                              title: "from",
+                              subTitle:
+                                  "${Provider.of<AuthProvider>(context).user.firstName} ${Provider.of<AuthProvider>(context).user.lastName}",
+                              content: args.pickupLocation.name,
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomTile(
+                              title: "to",
+                              subTitle: args.receiversName,
+                              content: args.dropOffLocation.name,
+                            ),
 //                        SizedBox(
 //                          height: 25,
 //                        ),
@@ -65,66 +71,103 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
 //                          title: "when",
 //                          subTitle: "jan 23, 12pm",
 //                        ),
-                        SizedBox(
-                          height: 25,
+                            SizedBox(
+                              height: 25,
+                            ),
+                            CustomTile(
+                              title: "Receiver's contact",
+                              subTitle: args.receiversPhone,
+                            ),
+                          ],
                         ),
-                        CustomTile(
-                          title: "Receiver's contact",
-                          subTitle: args.receiversPhone,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 20,
-              color: Colors.grey[200],
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.white,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 20,
+                  color: Colors.grey[200],
+                ),
+                Expanded(
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.12,
                     color: Colors.white,
-                    child: Center(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        height: MediaQuery.of(context).size.height * 0.08,
-                        child: RaisedButton(
-                          color: kLeichtPrimaryColor,
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  "₦ ${NumberFormat("#,##0", "en_US").format(200)}",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        color: Colors.white,
+                        child: Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            height: MediaQuery.of(context).size.height * 0.08,
+                            child: RaisedButton(
+                              color: kLeichtPrimaryColor,
+                              onPressed: () {
+                                setState(() {
+                                  showLoadingModal = true;
+                                });
+                                PaymentApi.getInstance()
+                                    .then((paymentApi) async {
+                                  paymentApi
+                                      .initializeTransaction(context, args)
+                                      .then((ref) {
+                                    setState(() {
+                                      showLoadingModal = false;
+                                    });
+                                    paymentApi.beginTransaction(context, ref);
+                                  }).catchError((err) {
+                                    setState(() {
+                                      showLoadingModal = false;
+                                    });
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Text(err.toString()),
+                                            actions: [
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("CLOSE"))
+                                            ],
+                                          );
+                                        });
+                                  });
+                                });
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(
+                                      "₦ ${NumberFormat("#,##0", "en_US").format(200)}",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(
+                                      "Checkout",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  "Checkout",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            )
+                )
+              ],
+            ),
+            showLoadingModal ? LoadingModal() : Container()
           ],
         ),
       ),

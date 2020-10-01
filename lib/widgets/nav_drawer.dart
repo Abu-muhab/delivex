@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:node_auth/constants/colors.dart';
+import 'package:node_auth/models/user.dart';
 import 'package:node_auth/providers/auth.dart';
+import 'package:node_auth/widgets/custom_indicator.dart';
 import 'package:node_auth/widgets/option_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -88,6 +90,225 @@ class NavDrawer extends StatelessWidget {
 }
 
 class _DrawerMenuOptions extends StatelessWidget {
+  void _onNameOptionPressed(BuildContext context) {
+    GlobalKey<CustomProgressIndicatorState> key = GlobalKey();
+    User user = Provider.of<AuthProvider>(context, listen: false).user;
+    showDialog(
+        context: context,
+        builder: (context) {
+          TextEditingController firstNameController =
+              TextEditingController(text: user.firstName);
+          TextEditingController lastNameController =
+              TextEditingController(text: user.lastName);
+          return AlertDialog(
+            title: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Name"),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: CustomProgressIndicator(
+                    key: key,
+                  ),
+                )
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: "First Name", border: UnderlineInputBorder()),
+                  controller: firstNameController,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: "Last Name", border: UnderlineInputBorder()),
+                  controller: lastNameController,
+                )
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "CANCEL",
+                  style: TextStyle(color: kLeichtPrimaryColor),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () async {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  key.currentState.setState(() {
+                    key.currentState.opacity = 1.0;
+                  });
+                  user
+                      .updateName(context, firstNameController.text,
+                          lastNameController.text)
+                      .then((result) {
+                    key.currentState.setState(() {
+                      key.currentState.opacity = 0.0;
+                    });
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text("Saved"),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "CLOSE",
+                                  style:
+                                      TextStyle(color: kLeichtAlternateColor),
+                                ),
+                              )
+                            ],
+                          );
+                        });
+                  }).catchError((err) {
+                    key.currentState.setState(() {
+                      key.currentState.opacity = 0.0;
+                    });
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(err.toString()),
+                            actions: [
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("CLOSE"))
+                            ],
+                          );
+                        });
+                  });
+                  ;
+                },
+                child: Text(
+                  "SAVE",
+                  style: TextStyle(color: kLeichtAlternateColor),
+                ),
+                color: kLeichtPrimaryColor,
+              )
+            ],
+          );
+        });
+  }
+
+  void _onPhoneOptionPressed(BuildContext context) {
+    GlobalKey<CustomProgressIndicatorState> key = GlobalKey();
+    User user = Provider.of<AuthProvider>(context, listen: false).user;
+    TextEditingController phoneController =
+        TextEditingController(text: user.phoneNumber);
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Name"),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: CustomProgressIndicator(
+                    key: key,
+                  ),
+                )
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: phoneController,
+                  decoration: InputDecoration(
+                      hintText: "Phone Number", border: UnderlineInputBorder()),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "CANCEL",
+                  style: TextStyle(color: kLeichtPrimaryColor),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () async {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  key.currentState.setState(() {
+                    key.currentState.opacity = 1.0;
+                  });
+                  user
+                      .updatePhone(context, phoneController.text)
+                      .then((result) {
+                    key.currentState.setState(() {
+                      key.currentState.opacity = 0.0;
+                    });
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text("Saved"),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "CLOSE",
+                                  style:
+                                      TextStyle(color: kLeichtAlternateColor),
+                                ),
+                              )
+                            ],
+                          );
+                        });
+                  }).catchError((err) {
+                    key.currentState.setState(() {
+                      key.currentState.opacity = 0.0;
+                    });
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text(err.toString()),
+                            actions: [
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("CLOSE"))
+                            ],
+                          );
+                        });
+                  });
+                },
+                child: Text(
+                  "SAVE",
+                  style: TextStyle(color: kLeichtAlternateColor),
+                ),
+                color: kLeichtPrimaryColor,
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,7 +327,9 @@ class _DrawerMenuOptions extends StatelessWidget {
                         " " +
                         authProvider.user.lastName,
                     addForwardIcon: true,
-                    onTap: () {},
+                    onTap: () {
+                      _onNameOptionPressed(context);
+                    },
                   );
                 },
               ),
@@ -117,7 +340,9 @@ class _DrawerMenuOptions extends StatelessWidget {
                     title: "Phone",
                     subtitle: authProvider.user.phoneNumber,
                     addForwardIcon: true,
-                    onTap: () {},
+                    onTap: () {
+                      _onPhoneOptionPressed(context);
+                    },
                   );
                 },
               ),

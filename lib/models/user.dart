@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:node_auth/providers/auth.dart';
+import 'package:provider/provider.dart';
 
 class User {
   String userId;
@@ -21,5 +25,51 @@ class User {
         firstName: json['firstName'],
         phoneNumber: json['phoneNumber'],
         lastName: json['lastName']);
+  }
+
+  Future<bool> updateName(
+      BuildContext context, String firstName, String lastName) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    http.Response response = await http.post('$domain/user/updateName',
+        body: JsonEncoder()
+            .convert({'firstName': firstName, 'lastName': lastName}),
+        headers: {
+          'Authorization':
+              'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}',
+          'Content-Type': 'application/json'
+        });
+    if (response.statusCode == 200) {
+      Map body = JsonDecoder().convert(response.body);
+      if (!body['successful']) {
+        throw (body['message']);
+      }
+      return authProvider.loadUserDetails(
+          authProvider.tokenDecoder(await authProvider.getEncodedToken()));
+    }
+    throw ('Server Error');
+  }
+
+  Future<bool> updatePhone(BuildContext context, String phoneNumber) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    http.Response response = await http.post('$domain/user/updatePhone',
+        body: JsonEncoder().convert({
+          'phoneNumber': phoneNumber,
+        }),
+        headers: {
+          'Authorization':
+              'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}',
+          'Content-Type': 'application/json'
+        });
+    if (response.statusCode == 200) {
+      Map body = JsonDecoder().convert(response.body);
+      if (!body['successful']) {
+        throw (body['message']);
+      }
+      return authProvider.loadUserDetails(
+          authProvider.tokenDecoder(await authProvider.getEncodedToken()));
+    }
+    throw ('Server Error');
   }
 }
