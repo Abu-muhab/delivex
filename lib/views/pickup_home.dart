@@ -80,37 +80,39 @@ class PickUpHomeState extends State<PickUpHome> {
                                 ),
                                 Expanded(
                                     child: TextFormField(
-                                      readOnly: true,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "Enter pickup location";
-                                        }
-                                        return null;
-                                      },
-                                      onTap: () async {
-                                        Navigator.pushNamed(context, "select_location")
-                                            .then((value) {
-                                          Place location = value;
-                                          if (location != null) {
-                                            pickupLocationController.text = location.name;
-                                            pickupLocation = location;
-                                          }
-                                        });
-                                      },
-                                      controller: pickupLocationController,
-                                      decoration: InputDecoration(
-                                          hintText: "Pickup location",
-                                          prefixIcon: Icon(Icons.my_location),
-                                          suffixIcon: Icon(Icons.more_vert),
-                                          fillColor: Colors.white,
-                                          filled: true,
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          disabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          )),
-                                    )),
+                                  readOnly: true,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Enter pickup location";
+                                    }
+                                    return null;
+                                  },
+                                  onTap: () async {
+                                    Navigator.pushNamed(
+                                            context, "select_location")
+                                        .then((value) {
+                                      Place location = value;
+                                      if (location != null) {
+                                        pickupLocationController.text =
+                                            location.name;
+                                        pickupLocation = location;
+                                      }
+                                    });
+                                  },
+                                  controller: pickupLocationController,
+                                  decoration: InputDecoration(
+                                      hintText: "Pickup location",
+                                      prefixIcon: Icon(Icons.my_location),
+                                      suffixIcon: Icon(Icons.more_vert),
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      )),
+                                )),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -151,7 +153,8 @@ class PickUpHomeState extends State<PickUpHome> {
                                   },
                                   readOnly: true,
                                   onTap: () async {
-                                    Navigator.pushNamed(context, "select_location")
+                                    Navigator.pushNamed(
+                                            context, "select_location")
                                         .then((value) {
                                       Place location = value;
                                       if (location != null) {
@@ -190,13 +193,15 @@ class PickUpHomeState extends State<PickUpHome> {
                                       fillColor: Colors.grey[100],
                                       filled: true,
                                       border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide:
-                                          BorderSide(color: Colors.transparent)),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent)),
                                       disabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide:
-                                          BorderSide(color: Colors.transparent))),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent))),
                                 ),
                                 SizedBox(height: 10),
                                 TextFormField(
@@ -213,13 +218,15 @@ class PickUpHomeState extends State<PickUpHome> {
                                       fillColor: Colors.grey[100],
                                       filled: true,
                                       border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide:
-                                          BorderSide(color: Colors.transparent)),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent)),
                                       disabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide:
-                                          BorderSide(color: Colors.transparent))),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent))),
                                 ),
                                 SizedBox(height: 10),
                                 SizedBox(
@@ -228,7 +235,8 @@ class PickUpHomeState extends State<PickUpHome> {
                                   child: RaisedButton(
                                     onPressed: () {},
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     color: kLeichtPrimaryColor,
                                     child: Text(
                                       "Next",

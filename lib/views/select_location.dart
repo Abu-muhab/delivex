@@ -38,7 +38,7 @@ class _WhereToScreenState extends State<WhereToScreen> {
         setState(() {
           searchResult = result;
           fetchingInfo = false;
-          doneButton=false;
+          doneButton = false;
         });
       });
     }
