@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:node_auth/models/order.dart';
 import 'package:node_auth/providers/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -69,6 +70,29 @@ class User {
       }
       return authProvider.loadUserDetails(
           authProvider.tokenDecoder(await authProvider.getEncodedToken()));
+    }
+    throw ('Server Error');
+  }
+
+  Future<List<Order>> getOrders(BuildContext context) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    http.Response response = await http.get('$domain/user/orders', headers: {
+      'Authorization':
+          'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}'
+    });
+    if (response.statusCode == 200) {
+      Map body = JsonDecoder().convert(response.body);
+      if (!body['successful']) {
+        throw (body['message']);
+      }
+
+      List data = body['data'];
+      List<Order> orders = new List();
+      data.forEach((orderData) {
+        orders.add(Order.fromJson(orderData));
+      });
+      return orders;
     }
     throw ('Server Error');
   }

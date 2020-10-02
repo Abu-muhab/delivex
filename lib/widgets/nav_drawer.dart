@@ -356,7 +356,7 @@ class _DrawerMenuOptions extends StatelessWidget {
                     subtitle: "Manage",
                     addForwardIcon: true,
                     onTap: () {
-                      Navigator.pushNamed(context, "parcels_page");
+                      Navigator.pushNamed(context, "orders");
                     },
                   ),
                   OptionTile(

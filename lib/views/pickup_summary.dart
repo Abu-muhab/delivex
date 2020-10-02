@@ -22,23 +22,23 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
   @override
   Widget build(BuildContext context) {
     args = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 1,
-        title: Text("Pickup details",
-            style: TextStyle(
-              color: Colors.black,
-            )),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      body: Container(
-        width: double.infinity,
-        color: Colors.white,
-        child: Stack(
-          children: [
-            Column(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            elevation: 1,
+            title: Text("Pickup details",
+                style: TextStyle(
+                  color: Colors.black,
+                )),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(color: Colors.black),
+          ),
+          body: Container(
+            width: double.infinity,
+            color: Colors.white,
+            child: Column(
               children: <Widget>[
                 Expanded(
                   flex: 3,
@@ -167,10 +167,10 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
                 )
               ],
             ),
-            showLoadingModal ? LoadingModal() : Container()
-          ],
+          ),
         ),
-      ),
+        showLoadingModal ? LoadingModal() : Container()
+      ],
     );
   }
 }

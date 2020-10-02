@@ -7,9 +7,9 @@ import 'dart:convert';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// const String domain = 'https://node-flutter.herokuapp.com';
+const String domain = 'https://node-flutter.herokuapp.com';
 // const String domain = 'http://localhost:8080';
-const String domain = 'http://192.168.43.91:8080';
+// const String domain = 'http://192.168.43.91:8080';
 
 class AuthProvider extends ChangeNotifier {
   AuthStatus authStatus = AuthStatus.isLoggedOut;

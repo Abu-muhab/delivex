@@ -7,11 +7,11 @@ class LoadingModal extends StatelessWidget {
       return Container(
         height: constraint.maxHeight,
         width: constraint.maxWidth,
-        color: Color.fromARGB(100, 255, 255, 255),
+        color: Color.fromARGB(100, 0, 0, 0),
         child: Center(
           child: SizedBox(
-            width: 200,
-            height: 50,
+            width: 250,
+            height: 70,
             child: Card(
               child: Center(
                 child: SizedBox(
