@@ -96,4 +96,28 @@ class User {
     }
     throw ('Server Error');
   }
+
+  Future<List<Order>> getOrderHistory(BuildContext context) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    http.Response response =
+        await http.get('$domain/user/orderHistory', headers: {
+      'Authorization':
+          'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}'
+    });
+    if (response.statusCode == 200) {
+      Map body = JsonDecoder().convert(response.body);
+      if (!body['successful']) {
+        throw (body['message']);
+      }
+
+      List data = body['data'];
+      List<Order> orders = new List();
+      data.forEach((orderData) {
+        orders.add(Order.fromJson(orderData));
+      });
+      return orders;
+    }
+    throw ('Server Error');
+  }
 }

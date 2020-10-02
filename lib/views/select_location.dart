@@ -206,36 +206,36 @@ class _WhereToScreenState extends State<WhereToScreen> {
                   fetchingInfo == true
                       ? LinearProgressIndicator()
                       : Container(height: 0, width: 0),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 30, right: 30, top: 10, bottom: 10),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('choose_saved');
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Icon(
-                                Icons.stars,
-                                color: Colors.grey,
-                                size: MediaQuery.of(context).size.height * 0.05,
-                              ),
-                              Text(
-                                "Choose a saved place",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
-                          Icon(Icons.navigate_next)
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(
+                  //       left: 30, right: 30, top: 10, bottom: 10),
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       Navigator.of(context).pushNamed('choose_saved');
+                  //     },
+                  //     child: Row(
+                  //       mainAxisSize: MainAxisSize.max,
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: <Widget>[
+                  //         Row(
+                  //           mainAxisSize: MainAxisSize.min,
+                  //           children: <Widget>[
+                  //             Icon(
+                  //               Icons.stars,
+                  //               color: Colors.grey,
+                  //               size: MediaQuery.of(context).size.height * 0.05,
+                  //             ),
+                  //             Text(
+                  //               "Choose a saved place",
+                  //               style: TextStyle(fontWeight: FontWeight.w500),
+                  //             )
+                  //           ],
+                  //         ),
+                  //         Icon(Icons.navigate_next)
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   searchResult == null || doneButton == true
                       ? Container()
                       : searchResult.length > 0

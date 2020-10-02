@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:node_auth/api/payment_api.dart';
 import 'package:node_auth/api/search_api.dart';
 import 'package:node_auth/constants/colors.dart';
@@ -111,11 +111,16 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
                                     .then((paymentApi) async {
                                   paymentApi
                                       .initializeTransaction(context, args)
-                                      .then((ref) {
+                                      .then((ref) async {
                                     setState(() {
                                       showLoadingModal = false;
                                     });
-                                    paymentApi.beginTransaction(context, ref);
+                                    CheckoutResponse response = await paymentApi
+                                        .beginTransaction(context, ref);
+                                    if (response.status) {
+                                      Navigator.pushReplacementNamed(
+                                          context, 'orders');
+                                    }
                                   }).catchError((err) {
                                     setState(() {
                                       showLoadingModal = false;

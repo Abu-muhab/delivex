@@ -352,22 +352,22 @@ class _DrawerMenuOptions extends StatelessWidget {
                   Divider(),
                   OptionTile(
                     icon: FontAwesomeIcons.boxOpen,
-                    title: "Your Orders",
+                    title: "Your Deliveries",
                     subtitle: "Manage",
                     addForwardIcon: true,
                     onTap: () {
                       Navigator.pushNamed(context, "orders");
                     },
                   ),
-                  OptionTile(
-                    photo: "images/address.png",
-                    title: "Saved Addresses",
-                    subtitle: "Manage Addresses",
-                    addForwardIcon: true,
-                    onTap: () {
-                      Navigator.pushNamed(context, "addresses");
-                    },
-                  ),
+                  // OptionTile(
+                  //   photo: "images/address.png",
+                  //   title: "Saved Addresses",
+                  //   subtitle: "Manage Addresses",
+                  //   addForwardIcon: true,
+                  //   onTap: () {
+                  //     Navigator.pushNamed(context, "addresses");
+                  //   },
+                  // ),
                   Divider(),
                   OptionTile(
                     photo: "images/faq.png",
