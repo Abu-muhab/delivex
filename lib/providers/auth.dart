@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:node_auth/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String domain = 'https://node-flutter.herokuapp.com';
