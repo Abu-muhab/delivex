@@ -7,9 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class SignUp extends StatelessWidget {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -89,95 +86,6 @@ class SignUp extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Expanded(
-                                          child: Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: TextFormField(
-                                          controller: firstNameController,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return "Enter First Name";
-                                            }
-                                            return null;
-                                          },
-                                          decoration: InputDecoration(
-                                              border: UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black)),
-                                              hintText: "First Name",
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color:
-                                                              Colors.black))),
-                                        ),
-                                      )),
-                                      Expanded(
-                                          child: Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: TextFormField(
-                                          controller: lastNameController,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return "Enter Last Name";
-                                            }
-                                            return null;
-                                          },
-                                          decoration: InputDecoration(
-                                              border: UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black)),
-                                              hintText: "Last Name",
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color:
-                                                              Colors.black))),
-                                        ),
-                                      ))
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: TextFormField(
-                                      controller: phoneController,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return "Enter phone number";
-                                        }
-
-                                        if (value.length < 10) {
-                                          return "Phone number not valid";
-                                        }
-                                        if (value.length == 11 &&
-                                            value[0] != "0") {
-                                          return "Phone number not valid";
-                                        }
-
-                                        if (value.length > 11) {
-                                          return "Phone number not valid";
-                                        }
-                                        return null;
-                                      },
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                          prefixText: "+234 ",
-                                          prefixStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black)),
-                                          hintText: "Phone",
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black))),
-                                    ),
-                                  ),
                                   Padding(
                                     padding: EdgeInsets.all(5),
                                     child: SizedBox(
@@ -281,16 +189,8 @@ class SignUp extends StatelessWidget {
                                                   .signUp(
                                                       emailController.text,
                                                       passwordController.text,
-                                                      firstNameController.text,
-                                                      lastNameController.text,
-                                                      phoneController.text)
-                                                  .then((val) {
-                                                if (val != null) {
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                          context, "home");
-                                                }
-                                              }).catchError((err) {
+                                                      context)
+                                                  .catchError((err) {
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) {

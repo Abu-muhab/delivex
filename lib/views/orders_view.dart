@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class Orders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    OrderProvider provider = Provider.of<OrderProvider>(context);
+    OrderProvider provider = Provider.of<OrderProvider>(context, listen: false);
     if (provider.orders != null) {
       provider.fetchOrders(context);
     }
@@ -20,8 +20,8 @@ class Orders extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Deliveries",
-              style: TextStyle(color: kLeichtPrimaryColor)),
+          title:
+              Text("Deliveries", style: TextStyle(color: kLeichtPrimaryColor)),
           iconTheme: IconThemeData(color: kLeichtPrimaryColor),
           backgroundColor: Colors.white,
           bottom: TabBar(

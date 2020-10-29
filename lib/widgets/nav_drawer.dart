@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:node_auth/constants/colors.dart';
-import 'package:node_auth/models/user.dart';
 import 'package:node_auth/providers/auth.dart';
-import 'package:node_auth/widgets/custom_indicator.dart';
 import 'package:node_auth/widgets/option_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -37,43 +35,50 @@ class NavDrawer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SafeArea(
-                child: Container(
-                  color: kLeichtPrimaryColor,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.account_circle,
-                                color: Colors.white,
-                                size: 80,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Container(
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, authProvider, _) {
-                                        return Text(
-                                          authProvider.user.firstName,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        );
-                                      },
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, 'edit_account');
+                  },
+                  child: Container(
+                    color: kLeichtPrimaryColor,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.account_circle,
+                                  color: Colors.white,
+                                  size: 80,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Container(
+                                      child: Consumer<AuthProvider>(
+                                        builder: (context, authProvider, _) {
+                                          return Text(
+                                            authProvider.user.firstName == null
+                                                ? 'Setup Profile'
+                                                : authProvider.user.firstName,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -90,225 +95,6 @@ class NavDrawer extends StatelessWidget {
 }
 
 class _DrawerMenuOptions extends StatelessWidget {
-  void _onNameOptionPressed(BuildContext context) {
-    GlobalKey<CustomProgressIndicatorState> key = GlobalKey();
-    User user = Provider.of<AuthProvider>(context, listen: false).user;
-    showDialog(
-        context: context,
-        builder: (context) {
-          TextEditingController firstNameController =
-              TextEditingController(text: user.firstName);
-          TextEditingController lastNameController =
-              TextEditingController(text: user.lastName);
-          return AlertDialog(
-            title: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text("Name"),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: CustomProgressIndicator(
-                    key: key,
-                  ),
-                )
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                      hintText: "First Name", border: UnderlineInputBorder()),
-                  controller: firstNameController,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                      hintText: "Last Name", border: UnderlineInputBorder()),
-                  controller: lastNameController,
-                )
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "CANCEL",
-                  style: TextStyle(color: kLeichtPrimaryColor),
-                ),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  key.currentState.setState(() {
-                    key.currentState.opacity = 1.0;
-                  });
-                  user
-                      .updateName(context, firstNameController.text,
-                          lastNameController.text)
-                      .then((result) {
-                    key.currentState.setState(() {
-                      key.currentState.opacity = 0.0;
-                    });
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text("Saved"),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  "CLOSE",
-                                  style:
-                                      TextStyle(color: kLeichtAlternateColor),
-                                ),
-                              )
-                            ],
-                          );
-                        });
-                  }).catchError((err) {
-                    key.currentState.setState(() {
-                      key.currentState.opacity = 0.0;
-                    });
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(err.toString()),
-                            actions: [
-                              FlatButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("CLOSE"))
-                            ],
-                          );
-                        });
-                  });
-                  ;
-                },
-                child: Text(
-                  "SAVE",
-                  style: TextStyle(color: kLeichtAlternateColor),
-                ),
-                color: kLeichtPrimaryColor,
-              )
-            ],
-          );
-        });
-  }
-
-  void _onPhoneOptionPressed(BuildContext context) {
-    GlobalKey<CustomProgressIndicatorState> key = GlobalKey();
-    User user = Provider.of<AuthProvider>(context, listen: false).user;
-    TextEditingController phoneController =
-        TextEditingController(text: user.phoneNumber);
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text("Name"),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: CustomProgressIndicator(
-                    key: key,
-                  ),
-                )
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: phoneController,
-                  decoration: InputDecoration(
-                      hintText: "Phone Number", border: UnderlineInputBorder()),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "CANCEL",
-                  style: TextStyle(color: kLeichtPrimaryColor),
-                ),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  key.currentState.setState(() {
-                    key.currentState.opacity = 1.0;
-                  });
-                  user
-                      .updatePhone(context, phoneController.text)
-                      .then((result) {
-                    key.currentState.setState(() {
-                      key.currentState.opacity = 0.0;
-                    });
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text("Saved"),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  "CLOSE",
-                                  style:
-                                      TextStyle(color: kLeichtAlternateColor),
-                                ),
-                              )
-                            ],
-                          );
-                        });
-                  }).catchError((err) {
-                    key.currentState.setState(() {
-                      key.currentState.opacity = 0.0;
-                    });
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(err.toString()),
-                            actions: [
-                              FlatButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("CLOSE"))
-                            ],
-                          );
-                        });
-                  });
-                },
-                child: Text(
-                  "SAVE",
-                  style: TextStyle(color: kLeichtAlternateColor),
-                ),
-                color: kLeichtPrimaryColor,
-              )
-            ],
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -318,38 +104,9 @@ class _DrawerMenuOptions extends StatelessWidget {
         children: <Widget>[
           Column(
             children: <Widget>[
-              Consumer<AuthProvider>(
-                builder: (context, authProvider, _) {
-                  return OptionTile(
-                    photo: "images/name.png",
-                    title: "Name",
-                    subtitle: authProvider.user.firstName +
-                        " " +
-                        authProvider.user.lastName,
-                    addForwardIcon: true,
-                    onTap: () {
-                      _onNameOptionPressed(context);
-                    },
-                  );
-                },
-              ),
-              Consumer<AuthProvider>(
-                builder: (context, authProvider, _) {
-                  return OptionTile(
-                    photo: "images/phone.png",
-                    title: "Phone",
-                    subtitle: authProvider.user.phoneNumber,
-                    addForwardIcon: true,
-                    onTap: () {
-                      _onPhoneOptionPressed(context);
-                    },
-                  );
-                },
-              ),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Divider(),
                   OptionTile(
                     icon: FontAwesomeIcons.boxOpen,
                     title: "Your Deliveries",
@@ -383,6 +140,17 @@ class _DrawerMenuOptions extends StatelessWidget {
                     addForwardIcon: false,
                     onTap: () {},
                   ),
+                  Divider(),
+                  OptionTile(
+                    icon: Icons.settings,
+                    title: "Settings",
+                    subtitle: "Account Settings",
+                    addForwardIcon: false,
+                    onTap: () {
+                      Navigator.pushNamed(context, 'settings');
+                    },
+                  ),
+                  Divider(),
                 ],
               )
             ],

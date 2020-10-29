@@ -64,13 +64,6 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
                               subTitle: args.receiversName,
                               content: args.dropOffLocation.name,
                             ),
-//                        SizedBox(
-//                          height: 25,
-//                        ),
-//                        CustomTile(
-//                          title: "when",
-//                          subTitle: "jan 23, 12pm",
-//                        ),
                             SizedBox(
                               height: 25,
                             ),

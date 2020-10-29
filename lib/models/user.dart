@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:node_auth/models/order.dart';
@@ -28,96 +29,55 @@ class User {
         lastName: json['lastName']);
   }
 
-  Future<bool> updateName(
+  Future<void> updateName(
       BuildContext context, String firstName, String lastName) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    http.Response response = await http.post('$domain/user/updateName',
-        body: JsonEncoder()
-            .convert({'firstName': firstName, 'lastName': lastName}),
-        headers: {
-          'Authorization':
-              'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}',
-          'Content-Type': 'application/json'
-        });
-    if (response.statusCode == 200) {
-      Map body = JsonDecoder().convert(response.body);
-      if (!body['successful']) {
-        throw (body['message']);
-      }
-      return authProvider.loadUserDetails(
-          authProvider.tokenDecoder(await authProvider.getEncodedToken()));
-    }
-    throw ('Server Error');
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(authProvider.firebaseUser.uid)
+        .set({'firstName': firstName, 'lastName': lastName},
+            SetOptions(merge: true));
   }
 
-  Future<bool> updatePhone(BuildContext context, String phoneNumber) async {
+  Future<void> updatePhone(BuildContext context, String phoneNumber) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    http.Response response = await http.post('$domain/user/updatePhone',
-        body: JsonEncoder().convert({
-          'phoneNumber': phoneNumber,
-        }),
-        headers: {
-          'Authorization':
-              'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}',
-          'Content-Type': 'application/json'
-        });
-    if (response.statusCode == 200) {
-      Map body = JsonDecoder().convert(response.body);
-      if (!body['successful']) {
-        throw (body['message']);
-      }
-      return authProvider.loadUserDetails(
-          authProvider.tokenDecoder(await authProvider.getEncodedToken()));
-    }
-    throw ('Server Error');
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(authProvider.firebaseUser.uid)
+        .set({'phoneNumber': phoneNumber}, SetOptions(merge: true));
   }
 
   Future<List<Order>> getOrders(BuildContext context) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    http.Response response = await http.get('$domain/user/orders', headers: {
-      'Authorization':
-          'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}'
+    QuerySnapshot snapshot;
+    snapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: authProvider.firebaseUser.uid)
+        .get();
+    List<Order> orders = new List();
+    snapshot.docs.forEach((orderData) {
+      print(orderData.data());
+      orders.add(Order.fromJson(orderData.data()['details']));
     });
-    if (response.statusCode == 200) {
-      Map body = JsonDecoder().convert(response.body);
-      if (!body['successful']) {
-        throw (body['message']);
-      }
-
-      List data = body['data'];
-      List<Order> orders = new List();
-      data.forEach((orderData) {
-        orders.add(Order.fromJson(orderData));
-      });
-      return orders;
-    }
-    throw ('Server Error');
+    return orders;
   }
 
   Future<List<Order>> getOrderHistory(BuildContext context) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    http.Response response =
-        await http.get('$domain/user/orderHistory', headers: {
-      'Authorization':
-          'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}'
+    QuerySnapshot snapshot;
+    snapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: authProvider.firebaseUser.uid)
+        .get();
+    List<Order> orders = new List();
+    snapshot.docs.forEach((orderData) {
+      print(orderData.data());
+      orders.add(Order.fromJson(orderData.data()['details']));
     });
-    if (response.statusCode == 200) {
-      Map body = JsonDecoder().convert(response.body);
-      if (!body['successful']) {
-        throw (body['message']);
-      }
-
-      List data = body['data'];
-      List<Order> orders = new List();
-      data.forEach((orderData) {
-        orders.add(Order.fromJson(orderData));
-      });
-      return orders;
-    }
-    throw ('Server Error');
+    return orders;
   }
 }

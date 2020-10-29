@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "855623235215",
+    "firebase_url": "https://delivery-client-5f214.firebaseio.com",
+    "project_id": "delivery-client-5f214",
+    "storage_bucket": "delivery-client-5f214.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855623235215:android:89add526d83a6de79522fa",
+        "android_client_info": {
+          "package_name": "com.gostcorp.node_auth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855623235215-ji5et2dvikgefa30br28h68s4lo2q8ll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDL_DK_yGDNsti5dzvvAL3SajhIhn2IZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855623235215-ji5et2dvikgefa30br28h68s4lo2q8ll.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -45,8 +45,10 @@ class PaymentApi {
       BuildContext context, PickUpActivity summary) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    http.Response response = await http.post('$domain/payment/initialize',
+    http.Response response = await http.post('$domain/initializeTransaction',
         body: JsonEncoder().convert({
+          'email': authProvider.user.email,
+          'userId': authProvider.firebaseUser.uid,
           'amount': 300000,
           'details': {
             'from':
@@ -64,11 +66,7 @@ class PaymentApi {
             'toContact': summary.receiversPhone
           }
         }),
-        headers: {
-          'Authorization':
-              'Bearer ${authProvider.tokenDecoder(await authProvider.getEncodedToken())}',
-          'Content-Type': 'application/json'
-        });
+        headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       Map body = JsonDecoder().convert(response.body);
       if (!body['successful']) {
