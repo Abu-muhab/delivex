@@ -13,6 +13,7 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
   const coordinates = []
   const pickupDeliveries = []
   const taskMap = {}
+  const courierId = req.query.id
 
   // add base station. count index 0
   coordinates.push('8.978615699999999,7.458202999999998')
@@ -36,7 +37,8 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
         locationName: isPickup === true ? order.fromLocationName : order.toLocationName,
         name: isPickup === true ? order.from : order.to,
         contact: isPickup === true ? order.fromContact : order.toContact,
-        orderId: order.id
+        orderId: order.id,
+        sibling: isPickup === true ? count + 1 : count
       }
     }
 
@@ -70,21 +72,28 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
       const routeMap = {}
       const batch = admin.firestore().batch()
       route.route.forEach(routeIndex => {
-        routeMap[routeIndex] = taskMap[routeIndex]
-        const orderRef = admin.firestore().collection('orders').doc(taskMap[routeIndex].id)
-        batch.update(orderRef, {
-          orderStatus: 'assigned',
-          deliveryStatus: 'pendingPickup',
-          routeIndex: routeIndex,
-          routeId: routeId,
-          routeAssignmentTime: admin.firestore.Timestamp.now()
-        })
+        // if index is zero ignore becase it is the base station
+        if (routeIndex !== 0) {
+          routeMap[routeIndex] = taskMap[routeIndex]
+          const orderRef = admin.firestore().collection('orders').doc(taskMap[routeIndex].orderId)
+
+          // only write to file if isPickup is true to avoid double writes for pickup and deliveries
+          if (taskMap[routeIndex].isPickup === true) {
+            batch.update(orderRef, {
+              orderStatus: 'assigned',
+              deliveryStatus: 'pendingPickup',
+              routeId: routeId,
+              routeAssignmentTime: admin.firestore.Timestamp.now()
+            })
+          }
+        }
       })
 
       batch.set(admin.firestore().collection('routes').doc(routeId), {
         route: route.route,
         routeMap: routeMap,
         status: 'live',
+        assignedCourier: courierId,
         created: admin.firestore.Timestamp.now()
       })
 
@@ -97,11 +106,12 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
           }
         })
       })
+    } else {
+      return res.json({
+        successful: false,
+        error: 'Invalid request format'
+      })
     }
-    return res.json({
-      successful: false,
-      error: 'Invalid request format'
-    })
   }).catch(err => {
     console.log(err)
     return res.json({
