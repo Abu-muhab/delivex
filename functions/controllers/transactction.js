@@ -29,7 +29,8 @@ exports.initializeTransaction = functions.https.onRequest((req, res) => {
       timeInitialized: admin.firestore.Timestamp.now(),
       details: req.body.details,
       paymentVerified: false,
-      transactionReference: response.data.data.reference
+      transactionReference: response.data.data.reference,
+      orderStatus: 'unassigned'
     }
 
     admin.firestore().collection('orders')

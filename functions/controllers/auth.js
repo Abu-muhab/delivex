@@ -1,4 +1,3 @@
-// const axios = require('axios').default
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 

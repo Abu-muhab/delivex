@@ -12,7 +12,6 @@ import 'package:node_auth/views/pickup_summary.dart';
 import 'package:node_auth/views/select_location.dart';
 import 'package:node_auth/views/settings.dart';
 import 'package:node_auth/views/signup.dart';
-import 'package:node_auth/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
