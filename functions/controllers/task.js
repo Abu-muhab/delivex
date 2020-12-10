@@ -14,9 +14,14 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
   const pickupDeliveries = []
   const taskMap = {}
   const courierId = req.query.id
+  const courierLocation = req.query.location
 
   // add base station. count index 0
-  coordinates.push('8.978615699999999,7.458202999999998')
+  coordinates.push(courierLocation)
+  taskMap[0] = {
+    // coords: '8.978615699999999,7.458202999999998'
+    coords: courierLocation
+  }
 
   let count = 1
 
@@ -51,7 +56,7 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
     pickups_deliveries: pickupDeliveries,
     num_vehicles: 1,
     max_travel_distance: 100000000,
-    max_delivery_per_vehicle: 2,
+    max_delivery_per_vehicle: 5,
     depot: 0,
     coordinates: coordinates,
     API_key: 'AIzaSyDwJnts_ewa6K2miTx6LevJ97rvgWJCSsY'
