@@ -10,6 +10,13 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
     .where('orderStatus', '==', 'unassigned')
     .limit(10).get()
 
+  if (orders.docs.length === 0 || orders.docs.length === undefined) {
+    return res.json({
+      successful: false,
+      error: 'There are currently no orders to assign'
+    })
+  }
+
   const coordinates = []
   const pickupDeliveries = []
   const taskMap = {}
@@ -19,7 +26,6 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
   // add base station. count index 0
   coordinates.push(courierLocation)
   taskMap[0] = {
-    // coords: '8.978615699999999,7.458202999999998'
     coords: courierLocation
   }
 
@@ -77,9 +83,8 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
       const routeMap = {}
       const batch = admin.firestore().batch()
       route.route.forEach(routeIndex => {
-        // if index is zero ignore becase it is the base station
+        routeMap[routeIndex] = taskMap[routeIndex]
         if (routeIndex !== 0) {
-          routeMap[routeIndex] = taskMap[routeIndex]
           const orderRef = admin.firestore().collection('orders').doc(taskMap[routeIndex].orderId)
 
           // only write to file if isPickup is true to avoid double writes for pickup and deliveries
