@@ -4,6 +4,21 @@ const axios = require('axios').default
 const { v4: uuidv4 } = require('uuid')
 
 exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
+  const courierId = req.query.id
+  const courierLocation = req.query.location
+
+  // check if the courier already has an active route
+  const routes = await admin.firestore().collection('routes')
+    .where('assignedCourier', '==', courierId)
+    .where('status', '==', 'live').get()
+
+  if (routes.docs.length > 0) {
+    return res.json({
+      successful: false,
+      error: 'This courier has already been assigned a task'
+    })
+  }
+
   const orders = await admin.firestore().collection('orders')
     .orderBy('paymentVerificationTime', 'desc')
     .where('paymentVerified', '==', true)
@@ -20,8 +35,6 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
   const coordinates = []
   const pickupDeliveries = []
   const taskMap = {}
-  const courierId = req.query.id
-  const courierLocation = req.query.location
 
   // add base station. count index 0
   coordinates.push(courierLocation)

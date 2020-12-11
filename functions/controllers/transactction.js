@@ -2,6 +2,7 @@ const axios = require('axios').default
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const crypto = require('crypto')
+const random = require('../utils/random')
 
 exports.initializeTransaction = functions.https.onRequest((req, res) => {
   axios({
@@ -30,7 +31,9 @@ exports.initializeTransaction = functions.https.onRequest((req, res) => {
       details: req.body.details,
       paymentVerified: false,
       transactionReference: response.data.data.reference,
-      orderStatus: 'unassigned'
+      orderStatus: 'unassigned',
+      pickupVerificationCode: random.generateRandomId(),
+      dropoffVerificationCode: random.generateRandomId()
     }
 
     admin.firestore().collection('orders')
