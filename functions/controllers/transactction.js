@@ -34,7 +34,8 @@ exports.initializeTransaction = functions.https.onRequest((req, res) => {
       orderStatus: 'unassigned',
       pickupVerificationCode: random.generateRandomId(),
       dropoffVerificationCode: random.generateRandomId(),
-      packageId: random.generateRandomMixedId()
+      packageId: random.generateRandomMixedId(),
+      deliveryStatus: 'pendingPickup'
     }
 
     admin.firestore().collection('orders')

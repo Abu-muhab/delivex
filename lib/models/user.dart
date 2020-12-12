@@ -51,14 +51,36 @@ class User {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     QuerySnapshot snapshot;
+    QuerySnapshot snapshot2;
     snapshot = await FirebaseFirestore.instance
         .collection('orders')
         .where('userId', isEqualTo: authProvider.firebaseUser.uid)
+        .where('deliveryStatus', isEqualTo: 'pendingPickup')
+        .where('paymentVerified', isEqualTo: true)
+        .get();
+    snapshot2 = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: authProvider.firebaseUser.uid)
+        .where('deliveryStatus', isEqualTo: 'pendingDelivery')
+        .where('paymentVerified', isEqualTo: true)
         .get();
     List<Order> orders = new List();
-    snapshot.docs.forEach((orderData) {
-      print(orderData.data());
-      orders.add(Order.fromJson(orderData.data()['details']));
+    List<QueryDocumentSnapshot> shots = [];
+    shots.addAll(snapshot.docs);
+    shots.addAll(snapshot2.docs);
+    shots.forEach((orderData) {
+      Map json = orderData.data()['details'];
+      json.putIfAbsent('amount', () => orderData.data()['amount']);
+      Timestamp timestamp = orderData.data()['paymentVerificationTime'];
+      json.putIfAbsent(
+          'date',
+          () =>
+              timestamp.toDate().day.toString() +
+              "/" +
+              timestamp.toDate().month.toString() +
+              "/" +
+              timestamp.toDate().year.toString());
+      orders.add(Order.fromJson(json));
     });
     return orders;
   }
@@ -70,11 +92,22 @@ class User {
     snapshot = await FirebaseFirestore.instance
         .collection('orders')
         .where('userId', isEqualTo: authProvider.firebaseUser.uid)
+        .where('deliveryStatus', isEqualTo: 'completed')
         .get();
     List<Order> orders = new List();
     snapshot.docs.forEach((orderData) {
-      print(orderData.data());
-      orders.add(Order.fromJson(orderData.data()['details']));
+      Map json = orderData.data()['details'];
+      json.putIfAbsent('amount', () => orderData.data()['amount']);
+      Timestamp timestamp = orderData.data()['paymentVerificationTime'];
+      json.putIfAbsent(
+          'date',
+          () =>
+              timestamp.toDate().day.toString() +
+              "/" +
+              timestamp.toDate().month.toString() +
+              "/" +
+              timestamp.toDate().year.toString());
+      orders.add(Order.fromJson(json));
     });
     return orders;
   }

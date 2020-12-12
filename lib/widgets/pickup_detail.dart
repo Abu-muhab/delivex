@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:node_auth/models/order.dart';
 
 class PickupDetail extends StatelessWidget {
@@ -35,13 +34,13 @@ class PickupDetail extends StatelessWidget {
           leading: Icon(
             Icons.date_range_outlined,
           ),
-          title: Text('2/12/2020'),
+          title: Text(order.date),
         ),
         ListTile(
           leading: Icon(
             Icons.payment,
           ),
-          title: Text('\$500'),
+          title: Text('₦ ${order.amount}'),
         )
       ],
     );
