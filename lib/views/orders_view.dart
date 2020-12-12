@@ -93,7 +93,10 @@ class Orders extends StatelessWidget {
                                 PickupDetail(
                                   order: orderProvider.orders[count],
                                 ),
-                                Divider(thickness: 1.5)
+                                Container(
+                                  height: 15,
+                                  color: Colors.grey[50],
+                                )
                               ],
                             );
                           },
@@ -164,7 +167,10 @@ class Orders extends StatelessWidget {
                                 PickupDetail(
                                   order: orderProvider.history[count],
                                 ),
-                                Divider(thickness: 1.5)
+                                Container(
+                                  height: 15,
+                                  color: Colors.grey[50],
+                                )
                               ],
                             );
                           },
