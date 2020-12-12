@@ -154,6 +154,7 @@ exports.verifyPickup = functions.https.onRequest(async (req, res) => {
   const packageId = req.query.packageId
   const code = req.query.code
   const positionInRoute = req.query.positionInRoute
+  console.log(positionInRoute)
 
   const querySnap = await admin.firestore().collection('orders').where('packageId', '==', packageId).get()
   if (querySnap.docs.length === 0) {
@@ -194,6 +195,7 @@ exports.verifyDropoff = functions.https.onRequest(async (req, res) => {
   const packageId = req.query.packageId
   const code = req.query.code
   const positionInRoute = req.query.positionInRoute
+  console.log(positionInRoute)
 
   const querySnap = await admin.firestore().collection('orders').where('packageId', '==', packageId).get()
   if (querySnap.docs.length === 0) {
@@ -227,5 +229,25 @@ exports.verifyDropoff = functions.https.onRequest(async (req, res) => {
       successful: false,
       error: 'Verification code is invalid'
     })
+  }
+})
+
+exports.routeCompletedChecker = functions.firestore.document('routes/{docId}').onWrite((change, context) => {
+  const routeMap = change.after.data().routeMap
+  const size = change.after.data().route.length - 2
+  let completeCount = 0
+
+  change.after.data().route.forEach(index => {
+    if (routeMap[index].status === 'completed') {
+      completeCount += 1
+    }
+  })
+  console.log(completeCount + 'out of' + size)
+  if (completeCount === size) {
+    return change.after.ref.update({
+      status: 'completed'
+    })
+  } else {
+    return 'not completed'
   }
 })
