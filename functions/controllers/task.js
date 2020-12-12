@@ -189,3 +189,43 @@ exports.verifyPickup = functions.https.onRequest(async (req, res) => {
     })
   }
 })
+
+exports.verifyDropoff = functions.https.onRequest(async (req, res) => {
+  const packageId = req.query.packageId
+  const code = req.query.code
+  const positionInRoute = req.query.positionInRoute
+
+  const querySnap = await admin.firestore().collection('orders').where('packageId', '==', packageId).get()
+  if (querySnap.docs.length === 0) {
+    return res.json({
+      successful: false,
+      error: 'Invalid packageId'
+    })
+  }
+
+  if (querySnap.docs[0].data().dropoffVerificationCode === code) {
+    const routeId = querySnap.docs[0].data().routeId
+    const routeSnap = await admin.firestore().collection('routes').doc(routeId).get()
+    const routeData = routeSnap.data()
+    routeData.routeMap[positionInRoute].status = 'completed'
+
+    const batch = admin.firestore().batch()
+
+    batch.update(routeSnap.ref, routeData)
+    batch.update(querySnap.docs[0].ref, {
+      deliveryStatus: 'completed'
+    })
+
+    return batch.commit().then(val => {
+      return res.json({
+        successful: true,
+        message: 'Verification code matches'
+      })
+    })
+  } else {
+    return res.json({
+      successful: false,
+      error: 'Verification code is invalid'
+    })
+  }
+})

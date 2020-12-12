@@ -18,6 +18,7 @@ exports.getDeliveryTask = taskController.getDeliveryTask
 
 // task verification
 exports.verifyPickup = taskController.verifyPickup
+exports.verifyDropoff = taskController.verifyDropoff
 
 // temp
 exports.edit = functions.https.onRequest((req, res) => {
