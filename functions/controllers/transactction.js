@@ -33,7 +33,8 @@ exports.initializeTransaction = functions.https.onRequest((req, res) => {
       transactionReference: response.data.data.reference,
       orderStatus: 'unassigned',
       pickupVerificationCode: random.generateRandomId(),
-      dropoffVerificationCode: random.generateRandomId()
+      dropoffVerificationCode: random.generateRandomId(),
+      packageId: random.generateRandomMixedId()
     }
 
     admin.firestore().collection('orders')

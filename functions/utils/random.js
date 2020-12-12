@@ -13,3 +13,13 @@ exports.generateRandomId = (length = 10) => {
     }
     return randomString
 }
+
+const chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+exports.generateRandomMixedId = (lenght = 10) => {
+    let randomString = ''
+    for (let x = 0; x < lenght; x++) {
+        randomString += chars[getRandomNumber(0, chars.length - 1)]
+    }
+    return randomString
+}

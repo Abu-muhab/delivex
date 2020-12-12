@@ -3,6 +3,11 @@ const admin = require('firebase-admin')
 const axios = require('axios').default
 const { v4: uuidv4 } = require('uuid')
 
+// delivery status values:
+// pendingPickup
+// pendingDelivery
+// delivered
+
 exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
   const courierId = req.query.id
   const courierLocation = req.query.location
@@ -62,7 +67,8 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
         name: isPickup === true ? order.from : order.to,
         contact: isPickup === true ? order.fromContact : order.toContact,
         orderId: order.id,
-        sibling: isPickup === true ? count + 1 : count
+        sibling: isPickup === true ? count + 1 : count,
+        packageId: doc.data().packageId
       }
     }
 
@@ -142,4 +148,44 @@ exports.getDeliveryTask = functions.https.onRequest(async (req, res) => {
       error: 'Something went wrong....'
     })
   })
+})
+
+exports.verifyPickup = functions.https.onRequest(async (req, res) => {
+  const packageId = req.query.packageId
+  const code = req.query.code
+  const positionInRoute = req.query.positionInRoute
+
+  const querySnap = await admin.firestore().collection('orders').where('packageId', '==', packageId).get()
+  if (querySnap.docs.length === 0) {
+    return res.json({
+      successful: false,
+      error: 'Invalid packageId'
+    })
+  }
+
+  if (querySnap.docs[0].data().pickupVerificationCode === code) {
+    const routeId = querySnap.docs[0].data().routeId
+    const routeSnap = await admin.firestore().collection('routes').doc(routeId).get()
+    const routeData = routeSnap.data()
+    routeData.routeMap[positionInRoute].status = 'completed'
+
+    const batch = admin.firestore().batch()
+
+    batch.update(routeSnap.ref, routeData)
+    batch.update(querySnap.docs[0].ref, {
+      deliveryStatus: 'pendingDelivery'
+    })
+
+    return batch.commit().then(val => {
+      return res.json({
+        successful: true,
+        message: 'Verification code matches'
+      })
+    })
+  } else {
+    return res.json({
+      successful: false,
+      error: 'Verification code is invalid'
+    })
+  }
 })

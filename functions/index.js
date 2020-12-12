@@ -3,6 +3,8 @@ admin.initializeApp()
 const transactionController = require('./controllers/transactction')
 const authController = require('./controllers/auth')
 const taskController = require('./controllers/task')
+const functions = require('firebase-functions')
+const random = require('./utils/random')
 
 // transactions
 exports.initializeTransaction = transactionController.initializeTransaction
@@ -13,3 +15,23 @@ exports.signUp = authController.signUp
 
 // task assignment
 exports.getDeliveryTask = taskController.getDeliveryTask
+
+// task verification
+exports.verifyPickup = taskController.verifyPickup
+
+// temp
+exports.edit = functions.https.onRequest((req, res) => {
+    admin.firestore().collection('orders').get().then(querySnap => {
+        const batch = admin.firestore().batch()
+        querySnap.forEach(doc => {
+            batch.update(doc.ref, {
+                orderStatus: 'unassigned'
+            })
+        })
+        batch.commit().then(val => {
+            return res.json({
+                successful: true
+            })
+        })
+    })
+})
