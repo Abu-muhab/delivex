@@ -53,7 +53,7 @@ class PaymentApi {
     Charge charge = Charge()
       ..accessCode = transactionRef['access_code']
       ..card = card
-      ..amount = fee * 100
+      ..amount = double.parse(fee.toString()).toInt() * 100
       ..reference = transactionRef['reference']
       ..email = authProvider.user.email;
     return PaystackPlugin.checkout(context, charge: charge);
@@ -67,7 +67,7 @@ class PaymentApi {
         body: JsonEncoder().convert({
           'email': authProvider.user.email,
           'userId': authProvider.firebaseUser.uid,
-          'amount': fee,
+          'amount': double.parse(fee.toString().trim()).toInt(),
           'details': {
             'from':
                 authProvider.user.firstName + " " + authProvider.user.lastName,
