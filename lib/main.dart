@@ -7,6 +7,7 @@ import 'package:node_auth/providers/orders_provider.dart';
 import 'package:node_auth/views/edit_account.dart';
 import 'package:node_auth/views/login.dart';
 import 'package:node_auth/views/orders_view.dart';
+import 'package:node_auth/views/overview.dart';
 import 'package:node_auth/views/pickup_home.dart';
 import 'package:node_auth/views/pickup_summary.dart';
 import 'package:node_auth/views/select_location.dart';
@@ -55,17 +56,12 @@ class MyApp extends StatelessWidget {
         'orders': (context) => Orders(),
         'settings': (context) => Settings(),
         'edit_account': (context) => EditAccount(),
+        'overview': (context) => Overview(),
         "home": (context) =>
             Consumer<AuthProvider>(builder: (context, authProvider, _) {
               if (authProvider.firebaseUser == null) {
                 return Login();
               }
-
-              // //splash screen
-              // if (authProvider.user == null) {
-              //   return SplashScreen();
-              // }
-
               return PickUpHome();
             })
       },

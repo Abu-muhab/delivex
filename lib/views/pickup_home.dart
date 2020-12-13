@@ -251,7 +251,7 @@ class PickUpHomeState extends State<PickUpHome> {
                                             .requestFocus(new FocusNode());
                                         if (formKey.currentState.validate()) {
                                           Navigator.pushNamed(
-                                              context, 'pickup_summary',
+                                              context, 'overview',
                                               arguments: PickUpActivity(
                                                   pickupLocation:
                                                       pickupLocation,
