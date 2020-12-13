@@ -21,7 +21,8 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
   bool showLoadingModal = false;
   @override
   Widget build(BuildContext context) {
-    args = ModalRoute.of(context).settings.arguments;
+    Map map = ModalRoute.of(context).settings.arguments;
+    args = map['details'];
     return Stack(
       children: [
         Scaffold(
@@ -103,13 +104,15 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
                                 PaymentApi.getInstance()
                                     .then((paymentApi) async {
                                   paymentApi
-                                      .initializeTransaction(context, args)
+                                      .initializeTransaction(
+                                          context, args, map['fee'])
                                       .then((ref) async {
                                     setState(() {
                                       showLoadingModal = false;
                                     });
-                                    CheckoutResponse response = await paymentApi
-                                        .beginTransaction(context, ref);
+                                    CheckoutResponse response =
+                                        await paymentApi.beginTransaction(
+                                            context, ref, map['fee']);
                                     if (response.status) {
                                       Navigator.pushReplacementNamed(
                                           context, 'orders');
@@ -143,7 +146,7 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
                                   Padding(
                                     padding: EdgeInsets.all(5),
                                     child: Text(
-                                      "₦ ${NumberFormat("#,##0", "en_US").format(200)}",
+                                      "₦ ${NumberFormat("#,###", "en_US").format(map['fee'])}",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),

@@ -86,3 +86,14 @@ exports.paystackHook = functions.https.onRequest((req, res) => {
     })
   }
 })
+
+exports.calculateDeliveryFee = functions.https.onRequest((req, res) => {
+  const distance = req.query.distance
+
+  const fee = (distance / 1000) * 186
+
+  return res.json({
+    successful: true,
+    data: fee
+  })
+})

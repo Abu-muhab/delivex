@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:node_auth/models/order.dart';
+import 'package:intl/intl.dart';
 
 class PickupDetail extends StatelessWidget {
   final Order order;
@@ -40,7 +41,8 @@ class PickupDetail extends StatelessWidget {
           leading: Icon(
             Icons.payment,
           ),
-          title: Text('₦ ${order.amount}'),
+          title:
+              Text('₦ ${NumberFormat("#,###", "en_US").format(order.amount)}'),
         )
       ],
     );

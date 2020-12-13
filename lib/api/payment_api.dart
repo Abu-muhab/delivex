@@ -26,8 +26,26 @@ class PaymentApi {
     return PaystackPlugin.initialize(publicKey: paystackPublicKey);
   }
 
+  Future<dynamic> getDeliveryFee(distance) async {
+    try {
+      String url =
+          'https://us-central1-delivery-client-5f214.cloudfunctions.net/calculateDeliveryFee?distance=$distance';
+      http.Response response = await http.get(url);
+      if (response.statusCode == 200) {
+        Map data = JsonDecoder().convert(response.body);
+        if (data['successful'] == true) {
+          return data['data'];
+        }
+        return null;
+      }
+      return null;
+    } catch (err) {
+      return null;
+    }
+  }
+
   Future<CheckoutResponse> beginTransaction(
-      BuildContext context, Map<String, String> transactionRef) async {
+      BuildContext context, Map<String, String> transactionRef, fee) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     PaymentCard card = PaymentCard(
@@ -35,21 +53,21 @@ class PaymentApi {
     Charge charge = Charge()
       ..accessCode = transactionRef['access_code']
       ..card = card
-      ..amount = 300000
+      ..amount = fee * 100
       ..reference = transactionRef['reference']
       ..email = authProvider.user.email;
     return PaystackPlugin.checkout(context, charge: charge);
   }
 
   Future<Map<String, String>> initializeTransaction(
-      BuildContext context, PickUpActivity summary) async {
+      BuildContext context, PickUpActivity summary, fee) async {
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
     http.Response response = await http.post('$domain/initializeTransaction',
         body: JsonEncoder().convert({
           'email': authProvider.user.email,
           'userId': authProvider.firebaseUser.uid,
-          'amount': 300000,
+          'amount': fee,
           'details': {
             'from':
                 authProvider.user.firstName + " " + authProvider.user.lastName,
