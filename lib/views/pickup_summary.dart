@@ -114,8 +114,8 @@ class PickUpSummaryPageState extends State<PickUpSummaryPage> {
                                         await paymentApi.beginTransaction(
                                             context, ref, map['fee']);
                                     if (response.status) {
-                                      Navigator.pushReplacementNamed(
-                                          context, 'orders');
+                                      Navigator.popUntil(
+                                          context, ModalRoute.withName('home'));
                                     }
                                   }).catchError((err) {
                                     setState(() {

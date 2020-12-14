@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:node_auth/constants/colors.dart';
 import 'package:node_auth/providers/auth.dart';
 import 'package:node_auth/widgets/option_tile.dart';
@@ -107,15 +106,6 @@ class _DrawerMenuOptions extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  OptionTile(
-                    icon: FontAwesomeIcons.boxOpen,
-                    title: "Your Deliveries",
-                    subtitle: "Manage",
-                    addForwardIcon: true,
-                    onTap: () {
-                      Navigator.pushNamed(context, "orders");
-                    },
-                  ),
                   // OptionTile(
                   //   photo: "images/address.png",
                   //   title: "Saved Addresses",
@@ -125,7 +115,6 @@ class _DrawerMenuOptions extends StatelessWidget {
                   //     Navigator.pushNamed(context, "addresses");
                   //   },
                   // ),
-                  Divider(),
                   OptionTile(
                     photo: "images/faq.png",
                     title: "FAQ",

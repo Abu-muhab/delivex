@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
         "login": (context) => Login(),
         "select_location": (context) => WhereToScreen(),
         "pickup_summary": (context) => PickUpSummaryPage(),
-        'orders': (context) => Orders(),
         'settings': (context) => Settings(),
         'edit_account': (context) => EditAccount(),
         'overview': (context) => Overview(),

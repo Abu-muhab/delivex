@@ -97,4 +97,30 @@ class PaymentApi {
     }
     throw ('Server Error');
   }
+
+  Future<Map<String, String>> initializeWalletTransaction(
+      BuildContext context, fee) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    http.Response response =
+        await http.post('$domain/initializeWalletTransaction',
+            body: JsonEncoder().convert({
+              'email': authProvider.user.email,
+              'userId': authProvider.firebaseUser.uid,
+              'amount': double.parse(fee.toString().trim()).toInt()
+            }),
+            headers: {'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      Map body = JsonDecoder().convert(response.body);
+      if (!body['successful']) {
+        throw (body['message']);
+      }
+      print(body['data']['data']['reference']);
+      return {
+        'access_code': body['data']['data']['access_code'],
+        'reference': body['data']['data']['reference']
+      };
+    }
+    throw ('Server Error');
+  }
 }

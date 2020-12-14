@@ -10,6 +10,7 @@ const random = require('./utils/random')
 exports.initializeTransaction = transactionController.initializeTransaction
 exports.paystackHook = transactionController.paystackHook
 exports.calculateDeliveryFee = transactionController.calculateDeliveryFee
+exports.initializeWalletTransaction = transactionController.initializeWalletTransaction
 
 // authentications
 exports.signUp = authController.signUp
