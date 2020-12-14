@@ -4,12 +4,12 @@ import 'package:node_auth/widgets/page_holder.dart' as PageHolder;
 
 class NavBar extends StatefulWidget {
   final Function(PageHolder.Page) onPageChanged;
-  NavBar({this.onPageChanged});
+  final PageHolder.Page selectedPage;
+  NavBar({this.onPageChanged, this.selectedPage});
   State createState() => NavBarState();
 }
 
 class NavBarState extends State<NavBar> {
-  PageHolder.Page selectedPage = PageHolder.Page.HOME;
   double iconSize = 30;
   Color iconColor = Colors.grey[500];
   Color iconSelectedColor = kLeichtAccentColor;
@@ -17,6 +17,7 @@ class NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Row(
@@ -24,50 +25,43 @@ class NavBarState extends State<NavBar> {
           children: [
             NavIcon(
               onTap: () {
-                setState(() {
-                  selectedPage = PageHolder.Page.HOME;
-                  widget.onPageChanged(selectedPage);
-                });
+                widget.onPageChanged(PageHolder.Page.HOME);
               },
               size: iconSize,
-              color: selectedPage == PageHolder.Page.HOME
+              color: widget.selectedPage == PageHolder.Page.HOME
                   ? iconSelectedColor
                   : iconColor,
               iconData: Icons.home_outlined,
             ),
             NavIcon(
               onTap: () {
-                setState(() {
-                  selectedPage = PageHolder.Page.WALLET;
-                  widget.onPageChanged(selectedPage);
-                });
+                widget.onPageChanged(PageHolder.Page.DELIVERIES);
               },
               size: iconSize,
-              color: selectedPage == PageHolder.Page.WALLET
+              color: widget.selectedPage == PageHolder.Page.DELIVERIES
+                  ? iconSelectedColor
+                  : iconColor,
+              iconData: Icons.directions_bike_outlined,
+            ),
+            NavIcon(
+              onTap: () {
+                widget.onPageChanged(PageHolder.Page.WALLET);
+              },
+              size: iconSize,
+              color: widget.selectedPage == PageHolder.Page.WALLET
                   ? iconSelectedColor
                   : iconColor,
               iconData: Icons.account_balance_wallet_outlined,
             ),
             NavIcon(
               onTap: () {
-                setState(() {
-                  selectedPage = PageHolder.Page.NOTIFICATION;
-                  widget.onPageChanged(selectedPage);
-                });
+                widget.onPageChanged(PageHolder.Page.NOTIFICATION);
               },
               size: iconSize,
-              color: selectedPage == PageHolder.Page.NOTIFICATION
+              color: widget.selectedPage == PageHolder.Page.NOTIFICATION
                   ? iconSelectedColor
                   : iconColor,
               iconData: Icons.notifications_none_outlined,
-            ),
-            NavIcon(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              size: iconSize,
-              color: iconColor,
-              iconData: Icons.menu,
             ),
           ],
         ),

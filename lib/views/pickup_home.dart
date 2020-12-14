@@ -60,6 +60,21 @@ class PickUpHomeState extends State<PickUpHome> {
                                     SizedBox(
                                       width: 10,
                                     ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        FocusScope.of(context)
+                                            .requestFocus(new FocusNode());
+                                        Scaffold.of(context).openDrawer();
+                                      },
+                                      child: Icon(
+                                        Icons.menu,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     Expanded(
                                         child: TextFormField(
                                       readOnly: true,

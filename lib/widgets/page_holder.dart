@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:node_auth/views/orders_view.dart';
 import 'package:node_auth/views/pickup_home.dart';
 import 'package:node_auth/views/wallet.dart';
 import 'package:node_auth/widgets/nav_bar.dart';
@@ -35,7 +36,9 @@ class PageHolderState extends State<PageHolder> {
                         ? PickUpHome()
                         : selectedPage == Page.WALLET
                             ? WalletPage()
-                            : Container(),
+                            : selectedPage == Page.DELIVERIES
+                                ? Orders()
+                                : Container(),
                   ),
                   NavBar(
                     onPageChanged: (page) {
@@ -43,6 +46,7 @@ class PageHolderState extends State<PageHolder> {
                         selectedPage = page;
                       });
                     },
+                    selectedPage: selectedPage,
                   )
                 ],
               ),
@@ -54,4 +58,4 @@ class PageHolderState extends State<PageHolder> {
   }
 }
 
-enum Page { HOME, WALLET, NOTIFICATION }
+enum Page { HOME, WALLET, NOTIFICATION, DELIVERIES }

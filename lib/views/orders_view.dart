@@ -25,8 +25,7 @@ class Orders extends StatelessWidget {
               SliverAppBar(
                 floating: true,
                 snap: true,
-                title: Text("Deliveries",
-                    style: TextStyle(color: kLeichtPrimaryColor)),
+                toolbarHeight: 10,
                 iconTheme: IconThemeData(color: kLeichtPrimaryColor),
                 backgroundColor: Colors.white,
                 bottom: TabBar(
