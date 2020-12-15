@@ -159,3 +159,28 @@ exports.calculateDeliveryFee = functions.https.onRequest((req, res) => {
     data: fee
   })
 })
+
+exports.walletBalanceUpdater = functions.firestore.document('walletTransactions/{docId}').onUpdate((change, context) => {
+  const data = change.after.data()
+  const userId = data.userId
+  const amount = data.amount
+  const paymentVerified = data.paymentVerified
+
+  if (paymentVerified === true) {
+    return admin.firestore().runTransaction(async (t) => {
+      const userRef = admin.firestore().collection('users').doc(userId)
+      const userDoc = await t.get(userRef)
+      let currentAmount = 0
+      if (userDoc.data().walletBalance === undefined) {
+        currentAmount = amount
+      } else {
+        currentAmount = userDoc.data().walletBalance + amount
+      }
+      t.update(userRef, {
+        walletBalance: currentAmount
+      })
+    })
+  } else {
+    return 'pending verification'
+  }
+})
