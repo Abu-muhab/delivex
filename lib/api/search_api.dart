@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-const api_key = "AIzaSyDwJnts_ewa6K2miTx6LevJ97rvgWJCSsY";
+const api_key = "AIzaSyB_rPr66VTngzCveTyuIed5C_Rs3CAApfE";
 
 class SearchApi {
   static Future<List<Place>> searchPlace(

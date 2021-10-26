@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:node_auth/api/search_api.dart';
 import 'package:node_auth/constants/screen_size.dart';
 import 'package:node_auth/providers/location_provider.dart';
@@ -26,8 +26,8 @@ class _WhereToScreenState extends State<WhereToScreen> {
 
   Place selected;
 
-  KeyboardVisibilityNotification keyBoardNotification;
-  int listenerId;
+  KeyboardVisibilityController keyboardVisibilityController =
+      KeyboardVisibilityController();
 
   void getSearchResult(BuildContext context, String searchKey) {
     if (searchKey != "" && searchKey != null) {
@@ -76,15 +76,17 @@ class _WhereToScreenState extends State<WhereToScreen> {
   @override
   void initState() {
     super.initState();
-    keyBoardNotification = KeyboardVisibilityNotification();
-    listenerId = keyBoardNotification.addNewListener(onHide: () {
-      getSearchResult(context, destinationController.text);
+    keyboardVisibilityController.onChange.listen((val) {
+      if(mounted){
+        if (val == false) {
+          getSearchResult(context, destinationController.text);
+        }
+      }
     });
   }
 
   @override
   void dispose() {
-    keyBoardNotification.dispose();
     super.dispose();
   }
 

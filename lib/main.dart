@@ -6,7 +6,6 @@ import 'package:node_auth/providers/location_provider.dart';
 import 'package:node_auth/providers/orders_provider.dart';
 import 'package:node_auth/views/edit_account.dart';
 import 'package:node_auth/views/login.dart';
-import 'package:node_auth/views/orders_view.dart';
 import 'package:node_auth/views/overview.dart';
 import 'package:node_auth/views/pickup_summary.dart';
 import 'package:node_auth/views/select_location.dart';

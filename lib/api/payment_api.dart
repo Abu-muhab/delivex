@@ -84,6 +84,7 @@ class PaymentApi {
           }
         }),
         headers: {'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       Map body = JsonDecoder().convert(response.body);
       if (!body['successful']) {

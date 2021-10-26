@@ -10,12 +10,12 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="node_auth"
+        android:label="pickup_delivery"
         android:icon="@mipmap/ic_launcher">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDwJnts_ewa6K2miTx6LevJ97rvgWJCSsY" />
+            android:value="AIzaSyB_rPr66VTngzCveTyuIed5C_Rs3CAApfE" />
 
         <activity
             android:name=".MainActivity"
